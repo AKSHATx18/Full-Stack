@@ -2,14 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 
 const app = express();
-app.use(express.json()); // to read JSON data from requests
+app.use(express.json());
 
-//  Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/studentdb")
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.log("❌ Connection failed:", err));
 
-//  Define Student model
 const studentSchema = new mongoose.Schema({
   name: String,
   age: Number,
@@ -17,7 +15,6 @@ const studentSchema = new mongoose.Schema({
 });
 const Student = mongoose.model("Student", studentSchema);
 
-//  Create new student
 app.post("/students", async (req, res) => {
   try {
     const student = new Student(req.body);
@@ -28,13 +25,11 @@ app.post("/students", async (req, res) => {
   }
 });
 
-//  Get all students
 app.get("/students", async (req, res) => {
   const students = await Student.find();
   res.json(students);
 });
 
-//  Update a student by ID
 app.put("/students/:id", async (req, res) => {
   try {
     const updated = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -44,7 +39,6 @@ app.put("/students/:id", async (req, res) => {
   }
 });
 
-//  Delete a student by ID
 app.delete("/students/:id", async (req, res) => {
   try {
     const deleted = await Student.findByIdAndDelete(req.params.id);
@@ -54,5 +48,4 @@ app.delete("/students/:id", async (req, res) => {
   }
 });
 
-// Start server
 app.listen(3000, () => console.log("🚀 Server running on http://localhost:3000"));
