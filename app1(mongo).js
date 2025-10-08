@@ -2,9 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 
 const app = express();
-app.use(express.json()); // Parse JSON request bodies
+app.use(express.json());
 
-// Connect to MongoDB
 const connectDB = async () => {
   try {
     await mongoose.connect("mongodb://127.0.0.1:27017/productdb", {
@@ -17,8 +16,6 @@ const connectDB = async () => {
   }
 };
 connectDB();
-
-//  Define Schema and Model
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -38,7 +35,6 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-//  Add new product
 app.post("/products", async (req, res) => {
   try {
     const product = new Product(req.body);
@@ -49,7 +45,6 @@ app.post("/products", async (req, res) => {
   }
 });
 
-// Get all products
 app.get("/products", async (req, res) => {
   try {
     const products = await Product.find();
@@ -59,7 +54,6 @@ app.get("/products", async (req, res) => {
   }
 });
 
-// Update product by ID
 app.put("/products/:id", async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -73,7 +67,6 @@ app.put("/products/:id", async (req, res) => {
   }
 });
 
-//  Delete product by ID
 app.delete("/products/:id", async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
@@ -84,7 +77,6 @@ app.delete("/products/:id", async (req, res) => {
   }
 });
 
-// Start Server
 const PORT = 3000;
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)
